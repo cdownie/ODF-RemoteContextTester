@@ -63,7 +63,7 @@
 
 	Private Sub frmMain_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
-		If Not LOServer.HasExited Then LibreOfficeHelper.TerminateServer(LOServer)
+		If Not LOServer Is Nothing AndAlso Not LOServer.HasExited Then LibreOfficeHelper.TerminateServer(LOServer)
 
 	End Sub
 
