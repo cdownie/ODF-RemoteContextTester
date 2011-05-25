@@ -30,6 +30,7 @@
 	End Sub
 
 
+
 	Private Sub btnSetPath_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSetPath.Click
 
 		Using fd As New OpenFileDialog
@@ -60,12 +61,27 @@
 
 	End Sub
 
+	Private Sub btnTest_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnTest.Click
+
+		Try
+			If LibreOfficeHelper.CanGetRemoteContext(txtPipe.Text) Then
+				MessageBox.Show("Connected to server. Victory is ours!")
+			End If
+
+		Catch ex As Exception
+			MessageBox.Show("Failed to connect to server. " & ex.Message)
+
+		End Try
+
+	End Sub
+
+
 
 	Private Sub frmMain_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
 		If Not LOServer Is Nothing AndAlso Not LOServer.HasExited Then LibreOfficeHelper.TerminateServer(LOServer)
 
 	End Sub
-
+	
 
 End Class

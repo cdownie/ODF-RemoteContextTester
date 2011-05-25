@@ -1,4 +1,7 @@
-﻿Public Module LibreOfficeHelper
+﻿Imports unoidl.com.sun.star.uno
+Imports unoidl.com.sun.star.bridge
+
+Public Module LibreOfficeHelper
 
 #Region " PInvoke for Terminate"
 
@@ -28,7 +31,7 @@
 
 		With p
 			.StartInfo.FileName = sofficePath
-			.StartInfo.Arguments = String.Format("-env:UserInstallation=/pseudoUser1 -accept=""pipe,name={0};urp;StarOffice.ServiceManager"" -nofirststartwizard -norestore -nologo -nodefault -nolockcheck ", pipeName)
+			.StartInfo.Arguments = String.Format("-env:UserInstallation=$SYSUSERCONFIG/LibreOfficeServer/pseudoUser1 -accept=""pipe,name={0};urp;StarOffice.ServiceManager"" -nofirststartwizard -norestore -nologo -nodefault -nolockcheck ", pipeName)
 
 			.Start()
 		End With
@@ -48,6 +51,23 @@
 		Next
 
 	End Sub
+
+	Public Function CanGetRemoteContext(ByVal pipeName As String) As Boolean
+		Dim xLocalContext As XComponentContext = uno.util.Bootstrap.defaultBootstrap_InitialComponentContext()
+		Dim xURLResolver As XUnoUrlResolver = xLocalContext.getServiceManager().createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", xLocalContext)
+		Dim xRemoteContext As XComponentContext = Nothing
+
+		Try
+			xRemoteContext = xURLResolver.resolve("uno:pipe,name=" & pipeName & ";urp;StarOffice.ComponentContext")
+
+		Catch ex As Exception
+			Throw
+
+		End Try
+
+		Return True
+
+	End Function
 
 
 
